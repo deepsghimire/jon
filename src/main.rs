@@ -11,7 +11,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             Ok(line) => {
                 rl.add_history_entry(&line)?;
                 let mut scanner = scanner::Scanner::new(&line);
-                println!("{:#?}", scanner.scan_all())
+                let mut parser = parser::Parser::new(&mut scanner);
+                println!("{:#?}", parser.parse_expr());
             }
             Err(err) => {
                 println!("Exiting: {}", err);

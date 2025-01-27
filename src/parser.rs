@@ -1,4 +1,3 @@
-
 use thiserror::Error;
 
 use crate::scanner::{Scanner, TokItem, Token};
@@ -12,14 +11,14 @@ pub enum ParseError<'input> {
 }
 
 #[derive(Debug, PartialEq)]
-enum Atom {
+pub enum Atom {
     Symbol(String),
     Number(f32),
     String(String),
 }
 
 #[derive(Debug, PartialEq)]
-enum Expr {
+pub enum Expr {
     Atom(Atom),
     List(List),
 }
@@ -32,7 +31,7 @@ pub struct Parser<'input> {
 }
 
 impl<'input> Parser<'input> {
-    fn new(scanner: &mut Scanner<'input>) -> Self {
+    pub fn new(scanner: &mut Scanner<'input>) -> Self {
         Self {
             tokens: scanner
                 .scan_all()
@@ -77,7 +76,7 @@ impl<'input> Parser<'input> {
         }
     }
 
-    fn parse_atom(&mut self) -> Result<Atom, ParseError<'input>> {
+    pub fn parse_atom(&mut self) -> Result<Atom, ParseError<'input>> {
         if self.at_eof() {
             return Err(ParseError::EOF);
         };
@@ -106,7 +105,7 @@ impl<'input> Parser<'input> {
         result
     }
 
-    fn parse_list(&mut self) -> Result<Expr, ParseError<'input>> {
+    pub fn parse_list(&mut self) -> Result<Expr, ParseError<'input>> {
         eprintln!("{}:{:?}: parsing list", self.current_pos, self.tokens);
         let mut list = List::new();
         if self.at_eof() {
@@ -124,7 +123,7 @@ impl<'input> Parser<'input> {
         Ok(Expr::List(list))
     }
 
-    fn parse_expr(&mut self) -> Result<Expr, ParseError<'input>> {
+    pub fn parse_expr(&mut self) -> Result<Expr, ParseError<'input>> {
         match self.parse_atom() {
             Ok(atom) => Ok(Expr::Atom(atom)),
             Err(_) => match self.parse_list() {
