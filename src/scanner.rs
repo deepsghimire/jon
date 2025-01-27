@@ -1,7 +1,7 @@
 use std::{fmt::Display, io};
 
 fn is_identifier(c: char) -> bool {
-    return c.is_alphabetic() || "-_@#$+=*&^%!".contains(c);
+    c.is_alphabetic() || "-_@#$+=*&^%!".contains(c)
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -21,7 +21,7 @@ pub struct TokItem<'input> {
     pub position: usize,
 }
 
-impl<'input> Display for TokItem<'input> {
+impl Display for TokItem<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:#?},{:#?}", self.token, self.position)
     }
@@ -40,14 +40,14 @@ impl<'input> Scanner<'input> {
         }
     }
     fn peek(&self) -> Result<char, io::Error> {
-        return self
+        self
             .text
             .chars()
             .nth(self.current_pos)
             .ok_or(io::Error::new(
                 io::ErrorKind::UnexpectedEof,
                 "Unexpected EOF",
-            ));
+            ))
     }
     fn advance(&mut self) -> Result<char, io::Error> {
         match self.peek() {
@@ -98,10 +98,10 @@ impl<'input> Scanner<'input> {
                 })
             }
 
-            x if x.is_digit(10) => {
+            x if x.is_ascii_digit() => {
                 let start = self.current_pos;
                 let number = self
-                    .advance_while(|c| c.is_digit(10) || c == '.')
+                    .advance_while(|c| c.is_ascii_digit() || c == '.')
                     .unwrap()
                     .unwrap();
                 Ok(TokItem {

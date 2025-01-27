@@ -1,8 +1,7 @@
-use std::io;
 
 use thiserror::Error;
 
-use crate::scanner::{self, Scanner, TokItem, Token};
+use crate::scanner::{Scanner, TokItem, Token};
 
 #[derive(Error, Debug, Eq, PartialEq)]
 pub enum ParseError<'input> {
@@ -57,7 +56,7 @@ impl<'input> Parser<'input> {
     }
 
     fn at_eof(&self) -> bool {
-        return self.current_pos >= self.tokens.len();
+        self.current_pos >= self.tokens.len()
     }
 
     fn advance(&mut self) {
@@ -100,7 +99,7 @@ impl<'input> Parser<'input> {
             x => Err(ParseError::UnexpectedToken(*x)),
         };
 
-        if let Ok(_) = result {
+        if result.is_ok() {
             self.advance();
         }
 
