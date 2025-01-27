@@ -1,4 +1,4 @@
-use std::io;
+use std::{fmt::Display, io};
 
 fn is_identifier(c: char) -> bool {
     return c.is_alphabetic() || "-_@#$+=*&^%!".contains(c);
@@ -19,6 +19,12 @@ pub enum Token<'input> {
 pub struct TokItem<'input> {
     pub token: Token<'input>,
     pub position: usize,
+}
+
+impl<'input> Display for TokItem<'input> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:#?},{:#?}", self.token, self.position)
+    }
 }
 
 pub struct Scanner<'input> {
@@ -157,7 +163,7 @@ impl<'input> Scanner<'input> {
         }
     }
 
-    pub fn scan_all(&mut self) -> Vec<TokItem> {
+    pub fn scan_all(&mut self) -> Vec<TokItem<'input>> {
         let mut result = Vec::new();
         while let Ok(tok) = self.next() {
             result.push(tok)
