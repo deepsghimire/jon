@@ -1,5 +1,6 @@
 use rustyline::DefaultEditor;
 
+mod eval;
 mod parser;
 mod scanner;
 
@@ -12,7 +13,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 rl.add_history_entry(&line)?;
                 let mut scanner = scanner::Scanner::new(&line);
                 let mut parser = parser::Parser::new(&mut scanner);
-                println!("{:#?}", parser.parse_expr());
+                let evaluator = eval::Evaluator;
+                let result = evaluator.eval(&parser.parse_expr().unwrap());
+                println!("{:#?}", result);
             }
             Err(err) => {
                 println!("Exiting: {}", err);
